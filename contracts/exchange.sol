@@ -7,7 +7,7 @@ import "hardhat/console.sol";
 contract TokenExchange is Ownable {
     string public exchange_name = "swapp";
 
-    address tokenAddr = 0x0165878A594ca255338adfa4d48449f69242Eb8F; // TODO: paste token contract address here
+    address tokenAddr = 0x99bbA657f2BbC93c02D617f8bA121cB8Fc104Acf; // TODO: paste token contract address here
     Token public token = Token(tokenAddr);
 
     // Liquidity pool for the exchange
@@ -96,11 +96,11 @@ contract TokenExchange is Ownable {
 
         // check min_exchange_rate
         require(
-            amountETH / tokenAmount >= min_exchange_rate,
+            amountETH / tokenAmount >= min_exchange_rate/100,
             "Error: Below min exchange rate"
         );
         require(
-            amountETH / tokenAmount <= max_exchange_rate,
+            amountETH / tokenAmount <= max_exchange_rate/100,
             "Error: Above max exchange rate"
         );
 
@@ -161,11 +161,11 @@ contract TokenExchange is Ownable {
 
         // Ensure exchange rate falls between provided parameters (Note: * both sides by amountTokens to prevent potential rounding errors)
         require(
-            amountETH / amountTokens >= min_exchange_rate,
+            amountETH / amountTokens >= min_exchange_rate/100,
             "Error: Below min exchange rate"
         );
         require(
-            amountETH / amountTokens <= max_exchange_rate,
+            amountETH / amountTokens <= max_exchange_rate/100,
             "Error: Above max exchange rate"
         );
 
@@ -264,7 +264,7 @@ contract TokenExchange is Ownable {
         );
         // Ensure within max exchange rate (Note: * both sides by token_reserves to prevent potential rounding errors)
         require(
-            eth_reserves / token_reserves <= max_exchange_rate,
+            (eth_reserves - amountETH) / (token_reserves + amountTokens) <= max_exchange_rate/100,
             "Error: Exchange rate greater than specified rate"
         );
         // Send tokens to contract
@@ -306,7 +306,7 @@ contract TokenExchange is Ownable {
 
         // Ensure within max exchange rate
         require(
-            eth_reserves / token_reserves <= max_exchange_rate,
+            (eth_reserves + msg.value) / (token_reserves - amountTokens) <= max_exchange_rate/100,
             "Error: Exchange rate greater than specified rate"
         );
 

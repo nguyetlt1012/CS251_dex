@@ -18,7 +18,7 @@ const token_symbol = "HNN"; // TODO: replace with symbol for your token
 // TODO: Paste your token and exchange contract ABIs in abi.js!
 
 // TODO: Paste your token contract address here:
-const token_address = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
+const token_address = "0x99bbA657f2BbC93c02D617f8bA121cB8Fc104Acf";
 const token_abi = [
     {
       "inputs": [],
@@ -581,7 +581,7 @@ const exchange_abi = [
       "type": "function"
     }
   ];
-const exchange_address = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853";
+const exchange_address = "0x0E801D84Fa97b50751Dbf25036d067dCf18858bF";
 const exchange_contract = new ethers.Contract(
     exchange_address,
     exchange_abi,
@@ -651,8 +651,9 @@ async function getPoolState() {
 async function getRates(maxSlippagePct) {
   let poolRate = (await getPoolState())["eth_token_rate"];
   console.log(poolRate); 
-  let max_exchange_rate = Math.floor((poolRate * (1 + maxSlippagePct / 100.0))) || 1;
-  let min_exchange_rate = Math.floor((poolRate * (1 - maxSlippagePct / 100.0)));
+  let max_exchange_rate = Math.floor((poolRate * (1 + maxSlippagePct / 100.0))*100) || 1;
+  let min_exchange_rate = Math.floor((poolRate * (1 - maxSlippagePct / 100.0))*100);
+  alert(max_exchange_rate + 'sss' + min_exchange_rate)
   return { max_exchange_rate, min_exchange_rate };
 }
 /*** ADD LIQUIDITY ***/
@@ -793,8 +794,8 @@ $("#swap-eth").click(function () {
         window.location.reload(true); // refreshes the page after add_IOU returns and the promise is unwrapped
     }).catch((err)=>{
         console.log(err)
-        // var message = (err.error.data.message.split('\'')[1])
-        // alert(message)
+        var message = (err.error.data.message.split('\'')[1])
+        alert(message)
         return;
     });
 });
