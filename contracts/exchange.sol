@@ -7,7 +7,7 @@ import "hardhat/console.sol";
 contract TokenExchange is Ownable {
     string public exchange_name = "swapp";
 
-    address tokenAddr = 0xA21DDc1f17dF41589BC6A5209292AED2dF61Cc94; // TODO: paste token contract address here
+    address tokenAddr = 0x0165878A594ca255338adfa4d48449f69242Eb8F; // TODO: paste token contract address here
     Token public token = Token(tokenAddr);
 
     // Liquidity pool for the exchange
@@ -155,8 +155,7 @@ contract TokenExchange is Ownable {
 
         // check token of user in pool
         require(
-            amountTokens * demominate <=
-                (lps[msg.sender] * token_reserves),
+            amountTokens * demominate <= (lps[msg.sender] * token_reserves),
             "Error: User does not have enough tokens"
         );
 
@@ -249,10 +248,7 @@ contract TokenExchange is Ownable {
         require(!lock, "Error: locked");
         lock = true;
 
-        require(
-            amountTokens > 0,
-            "Error: Amount of tokens must be positive"
-        );
+        require(amountTokens > 0, "Error: Amount of tokens must be positive");
         require(
             amountTokens <= token.balanceOf(msg.sender),
             "Error: Don't have enough tokens"
@@ -273,7 +269,7 @@ contract TokenExchange is Ownable {
         );
         // Send tokens to contract
         token.transferFrom(msg.sender, address(this), amountTokens);
-        
+
         // update token reserves
         token_reserves = token.balanceOf(address(this));
 
@@ -299,15 +295,21 @@ contract TokenExchange is Ownable {
         // Calculate respective amount of Tokens
         require(msg.value > 0, "Error: Must swap a positive amount of ETH");
         uint amountTokens = token_reserves - (k / (eth_reserves + msg.value));
-        uint fees = amountTokens * swap_fee_numerator / swap_fee_denominator;
+        uint fees = (amountTokens * swap_fee_numerator) / swap_fee_denominator;
         amountTokens -= fees;
 
         // Ensure token_reserves not 0
-        require(token_reserves - amountTokens >= 1, "Error: Cannot deplete Token reserves below 1 Token");
-        
+        require(
+            token_reserves - amountTokens >= 1,
+            "Error: Cannot deplete Token reserves below 1 Token"
+        );
+
         // Ensure within max exchange rate
-        require(eth_reserves / token_reserves <= max_exchange_rate, "Error: Exchange rate greater than specified rate");
-        
+        require(
+            eth_reserves / token_reserves <= max_exchange_rate,
+            "Error: Exchange rate greater than specified rate"
+        );
+
         // update amount of ETH
         eth_reserves = address(this).balance;
 

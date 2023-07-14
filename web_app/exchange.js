@@ -18,7 +18,7 @@ const token_symbol = "HNN"; // TODO: replace with symbol for your token
 // TODO: Paste your token and exchange contract ABIs in abi.js!
 
 // TODO: Paste your token contract address here:
-const token_address = "0xA21DDc1f17dF41589BC6A5209292AED2dF61Cc94";
+const token_address = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
 const token_abi = [
     {
       "inputs": [],
@@ -581,7 +581,7 @@ const exchange_abi = [
       "type": "function"
     }
   ];
-const exchange_address = "0x2A590C461Db46bca129E8dBe5C3998A8fF402e76";
+const exchange_address = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853";
 const exchange_contract = new ethers.Contract(
     exchange_address,
     exchange_abi,
@@ -603,7 +603,7 @@ async function init() {
         poolState["eth_liquidity"] === 0
     ) {
         // Call mint twice to make sure mint can be called mutliple times prior to disable_mint
-        const total_supply = 1000;
+        const total_supply = 10000;
         await token_contract
             .connect(provider.getSigner(defaultAccount))
             .mint(total_supply / 2);
@@ -1148,6 +1148,6 @@ const sanityCheck = async function () {
 // Sleep 3s to ensure init() finishes before sanityCheck() runs on first load.
 // If you run into sanityCheck() errors due to init() not finishing, please extend the sleep time.
 
-setTimeout(function () {
-  sanityCheck();
-}, 3000);
+// setTimeout(function () {
+//   sanityCheck();
+// }, 3000);
